@@ -1,9 +1,13 @@
-import { Hono } from 'hono'
+import { Hono } from "hono";
 
-const app = new Hono()
+import { registerPageRoutes } from "./page-router";
 
-app.get('/', (c) => {
-  return c.text('Hello Hono!')
-})
+const app = new Hono();
 
-export default app
+app.get("/status", (c) => {
+  return c.text("Ok!");
+});
+
+registerPageRoutes(app);
+
+export default app;
