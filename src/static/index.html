@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kids Pages</title>
+    <script src="https://kit.fontawesome.com/fa068701ca.js" crossorigin="anonymous"></script>
+    <style>
+        /* Global Style */
+        html {
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        /* Icon Style */
+        .icon {
+            font-size: 4rem;
+            padding: 10px;
+            border: 2px solid #ffb6c1; /* Super light pink border */
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        background-color: #ffb6c1; /* Light pink background */
+        color: #c71585; /* Dark pink color */
+        }
+
+        /* Grid Style */
+        .icon-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            grid-template-rows: repeat(2, 1fr);
+            gap: 10px;
+            width: 100%;
+            height: 100vh;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .selected-icon {
+        background-color: #d147a3; /* Darker pink */
+        border-color: #c71585; /* Darker complementing color choice */
+        color: white; /* Inverted icon color */
+        }
+    </style>
+    <script type="text/javascript">
+      let selectedIcons = [];
+        function handleIconClick(event) {
+          const iconId = event.target.id;
+          if(selectedIcons.includes(iconId)) {
+            selectedIcons = selectedIcons.filter(icon => icon !== iconId);
+          } else {
+            selectedIcons = [...selectedIcons, iconId];
+          }
+          
+          highlightSelectedIcons();
+          
+          if(selectedIcons.length >= 3) {
+            setTimeout(() => {
+              generateImage();
+              selectedIcons = [];
+              highlightSelectedIcons();
+            }, 1000);
+          }
+        }
+        function highlightSelectedIcons() {
+          const iconGrid = document.getElementById('icon-grid');
+          iconGrid.querySelectorAll('.icon').forEach(icon => {
+            if(selectedIcons.includes(icon.id)) {
+              icon.classList.add('selected-icon');
+            } else {
+              icon.classList.remove('selected-icon');
+            }
+          });
+        }
+        function generateImage() {
+          console.log('Generating image with selected icons:', selectedIcons);
+        }
+    </script>
+</head>
+<body>
+
+    <section id="icon-grid" class="icon-grid">
+        <i onclick="handleIconClick(event)" id="unicorn" class="fa-regular fa-unicorn icon"></i>
+        <i onclick="handleIconClick(event)" id="princess" class="fa-regular fa-crown icon"></i>
+        <i onclick="handleIconClick(event)" id="mermaid" class="fa-regular fa-dolphin icon"></i>
+        <i onclick="handleIconClick(event)" id="dinosaur" class="fa-regular fa-dinosaur icon"></i>
+        <i onclick="handleIconClick(event)" id="alien" class="fa-regular fa-ufo icon"></i>
+        <i onclick="handleIconClick(event)" id="flower-girl" class="fa-regular fa-flower-tulip icon"></i>
+        <i onclick="handleIconClick(event)" id="rainbow" class="fa-regular fa-cloud-rainbow icon"></i>
+        <i onclick="handleIconClick(event)" id="kitten" class="fa-regular fa-cat icon"></i>
+    </section>
+
+</body>
+</html>
