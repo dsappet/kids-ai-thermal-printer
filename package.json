@@ -4,6 +4,8 @@
     "dev": "bun run --hot src/index.ts"
   },
   "dependencies": {
+    "@aws-sdk/client-s3": "^3.685.0",
+    "@point-of-sale/receipt-printer-encoder": "^3.0.2",
     "hono": "^4.6.5",
     "openai": "^4.68.1"
   },
