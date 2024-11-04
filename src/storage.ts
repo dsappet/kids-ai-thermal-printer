@@ -29,7 +29,8 @@ export async function uploadImage(
     });
 
     const response = await s3Client.send(command);
-    console.log("Image uploaded successfully:", response);
+    console.log("Image uploaded to backblaze");
+    // console.log("Image uploaded successfully:", response);
     return response;
   } catch (error) {
     console.error("Error uploading image:", error);

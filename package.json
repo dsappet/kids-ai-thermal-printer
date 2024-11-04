@@ -1,7 +1,8 @@
 {
   "name": "kids-ai-thermal-printer",
   "scripts": {
-    "dev": "bun run --hot src/index.ts"
+    "dev": "bun run --hot src/index.ts",
+    "start": "bun run src/index.ts"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.685.0",
