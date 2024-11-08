@@ -7,8 +7,12 @@
   "dependencies": {
     "@aws-sdk/client-s3": "^3.685.0",
     "@point-of-sale/receipt-printer-encoder": "^3.0.2",
+    "canvas": "^2.11.2",
     "hono": "^4.6.5",
-    "openai": "^4.68.1"
+    "image-pixels": "^2.2.2",
+    "openai": "^4.68.1",
+    "sharp": "^0.33.5",
+    "usb": "^2.14.0"
   },
   "devDependencies": {
     "@types/bun": "latest"

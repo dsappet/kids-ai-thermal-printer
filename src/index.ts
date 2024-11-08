@@ -2,6 +2,8 @@ import { Context, Hono } from "hono";
 import { serveStatic } from "hono/bun";
 import { generateImage } from "./openai";
 import { uploadImage } from "./storage";
+import { sendBufferToDevice } from "./usb";
+import { encodeImage } from "./printer-encoder";
 
 const app = new Hono();
 
@@ -49,7 +51,7 @@ app.get("/print", async (c: Context) => {
     }
 
     // Generate an image based on the keywords
-    const prompt = `A whimsical coloring book page featuring a ${keywordsArray.join(
+    const prompt = `A whimsical coloring page featuring a ${keywordsArray.join(
       " "
     )} in chibi style, surrounded by playful patterns and cute details like stars, hearts, and clouds. The scene should invite creativity with simple yet detailed outlines for coloring.`;
 
@@ -61,14 +63,21 @@ app.get("/print", async (c: Context) => {
       return c.json({ error: "Failed to generate image" }, 500);
     }
 
-    const fileName = `${Date.now()}-${keywordsArray.join("-")}.png`;
+    // Print to the thermal printer if the printer is connected
+    const printData = await encodeImage(image);
+    await sendBufferToDevice(printData);
 
+    // Upload the image to the cloud
+    const fileName = `${Date.now()}-${keywordsArray.join("-")}.png`;
     await uploadImage(image, fileName);
 
     // Print to the thermal printer if the printer is connected
     // if (isPrinterConnected) {
     //   printImage(image);
     // }
+
+    console.log("Time:", new Date(Date.now()).toISOString());
+    console.log("\n=== Request Complete ===");
 
     // Create proper headers
     const headers = {

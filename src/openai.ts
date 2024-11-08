@@ -4,7 +4,7 @@ const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
 export const generateImage = async (prompt: string): Promise<Buffer> => {
   const response = await openai.images.generate({
-    model: "dall-e-3", 
+    model: "dall-e-3",
     prompt,
     n: 1,
     size: "1024x1024", // 512x512 256x256,1024x1024 are also options
