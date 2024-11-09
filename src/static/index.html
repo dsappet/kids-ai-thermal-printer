@@ -149,11 +149,11 @@ modal.addEventListener('click', (e) => {
           highlightSelectedIcons();
           
           if(selectedIcons.length >= 2) {
-            setTimeout(async () => {
+            // setTimeout(async () => {
               await generateImage();
               selectedIcons = [];
               highlightSelectedIcons();
-            }, 500);
+            // }, 200);
           }
         }
         function highlightSelectedIcons() {
@@ -168,22 +168,32 @@ modal.addEventListener('click', (e) => {
         }
         async function generateImage() {
           console.log('Generating image with selected icons:', selectedIcons);
-          const response = await fetch('/print?keywords=' + selectedIcons.join(','), {
-            method: 'GET',
+          const loadingIndicator = document.createElement('div');
+          loadingIndicator.id = 'loading-indicator';
+          loadingIndicator.innerText = 'Generating image...';
+          document.body.appendChild(loadingIndicator);
+          try {
+            const response = await fetch('/print?keywords=' + selectedIcons.join(','), {
+              method: 'GET',
           });
           // console.log('Response:', response);
           if(response.ok) {
             console.log('Image generated successfully');
             // get the image data
-            const imageData = await response.blob();
-            console.log('Image data:', imageData);
+            // const imageData = await response.blob();
+            // console.log('Image data:', imageData);
             // display the image in a modal
-            const modalImage = document.getElementById('modal-image');
-            modalImage.src = URL.createObjectURL(imageData);
-            openModal();
+            // const modalImage = document.getElementById('modal-image');
+            // modalImage.src = URL.createObjectURL(imageData);
+            // openModal();
           } else {
             console.error('Failed to generate image');
           }
+          document.body.removeChild(loadingIndicator);
+        } catch (error) {
+          console.error('Error generating image:', error);
+          document.body.removeChild(loadingIndicator);
+        }
         }
         const iconGrid = document.getElementById("icon-grid");
         const children = iconGrid.children;

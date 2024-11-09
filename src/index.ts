@@ -1,11 +1,24 @@
 import { Context, Hono } from "hono";
 import { serveStatic } from "hono/bun";
+import { cors } from "hono/cors";
 import { generateImage } from "./openai";
 import { uploadImage } from "./storage";
 import { sendBufferToDevice } from "./usb";
 import { encodeImage } from "./printer-encoder";
+import { connectAndSend } from "./usb-legacy";
+import { serve } from "bun";
 
 const app = new Hono();
+
+app.use(
+  "*",
+  cors({
+    origin: "*",
+    allowMethods: ["*"],
+    allowHeaders: ["*"],
+    exposeHeaders: ["Content-Disposition"],
+  })
+);
 
 app.get("/status", (c) => {
   return c.text("Ok!");
@@ -65,19 +78,21 @@ app.get("/print", async (c: Context) => {
 
     // Print to the thermal printer if the printer is connected
     const printData = await encodeImage(image);
-    await sendBufferToDevice(printData);
+
+    // The webusb library way, this doesn't seem supported on the raspberry pi
+    // await sendBufferToDevice(printData);
+
+    // the legacy way, this works on the raspberry pi
+    await connectAndSend(printData);
 
     // Upload the image to the cloud
     const fileName = `${Date.now()}-${keywordsArray.join("-")}.png`;
     await uploadImage(image, fileName);
 
-    // Print to the thermal printer if the printer is connected
-    // if (isPrinterConnected) {
-    //   printImage(image);
-    // }
-
     console.log("Time:", new Date(Date.now()).toISOString());
     console.log("\n=== Request Complete ===");
+
+    // return c.json({ success: true });
 
     // Create proper headers
     const headers = {
@@ -99,4 +114,21 @@ app.get("/print", async (c: Context) => {
   }
 });
 
-export default app;
+// export default app;
+export default {
+  serve() {
+    return serve({
+      fetch: app.fetch,
+      port: process.env.PORT || 3000,
+      // Set timeout to 90 seconds or adjust as needed
+      idleTimeout: 90,
+      // Optional development settings
+      development: process.env.NODE_ENV !== "production",
+      // Error handling
+      error(error) {
+        console.error("Server error:", error);
+        return new Response("Internal Server Error", { status: 500 });
+      },
+    });
+  },
+};

@@ -1,5 +1,7 @@
+import { webusb } from "usb";
 import { encodeImage } from "./src/printer-encoder";
 import { sendBufferToDevice } from "./src/usb";
+import { listUsbDevices } from "./src/usb-legacy";
 
 const test = async () => {
   // Use BUN to read in the test image
@@ -15,4 +17,9 @@ const test = async () => {
   await sendBufferToDevice(encodedImage);
 };
 
-test();
+const testUsb = async () => {
+  const devices = listUsbDevices();
+  console.log(devices);
+};
+
+testUsb();
