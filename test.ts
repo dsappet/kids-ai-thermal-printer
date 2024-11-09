@@ -1,7 +1,7 @@
-import { webusb } from "usb";
+import { findBySerialNumber, webusb } from "usb";
 import { encodeImage } from "./src/printer-encoder";
 import { sendBufferToDevice } from "./src/usb";
-import { listUsbDevices } from "./src/usb-legacy";
+import { connectAndSend, listUsbDevices } from "./src/usb-legacy";
 
 const test = async () => {
   // Use BUN to read in the test image
@@ -13,13 +13,19 @@ const test = async () => {
 
   // Now encode the image
   const encodedImage = await encodeImage(buffer);
-
-  await sendBufferToDevice(encodedImage);
+  await connectAndSend(encodedImage);
+  // await sendBufferToDevice(encodedImage);
 };
 
 const testUsb = async () => {
   const devices = listUsbDevices();
+
   console.log(devices);
 };
 
-testUsb();
+// listUsbDevices();
+// const device = await findBySerialNumber("GD107676A72D80113");
+// console.log(device);
+// console.log(device.interfaces);
+test();
+// testUsb();

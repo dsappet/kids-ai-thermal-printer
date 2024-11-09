@@ -74,7 +74,30 @@ export const connectAndSend = async (data: Buffer) => {
   // // Example write operation
   // await endpoint.transfer(data);
   const device = await findBySerialNumber("GD107676A72D80113");
+
+  // // Get the first interface
+  // const iFace = device.interfaces[0];
+
+  // // More verbose logging for debugging
+  // console.log("Checking kernel driver...");
+
+  // // Check if kernel driver is active and detach it
+  // if (iFace.isKernelDriverActive()) {
+  //   console.log("Kernel driver is active, attempting to detach...");
+  //   try {
+  //     await new Promise((resolve, reject) => {
+  //       iFace.detachKernelDriver();
+  //       resolve(true);
+  //     });
+  //     console.log("Kernel driver detached successfully");
+  //   } catch (detachError) {
+  //     console.error("Error detaching kernel driver:", detachError);
+  //     throw detachError;
+  //   }
+  // }
+
   const webDevice = await WebUSBDevice.createInstance(device);
+  console.log(webDevice);
   await webDevice.open();
   const configuration = webDevice.configuration;
   // Claim the interface for use
